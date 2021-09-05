@@ -4,6 +4,7 @@ Avantage:
   - Tout dans une seul app
   - Plus simple à déployer
   - Mongodb => moins de doc que mysql pas la même philosophie je connais pas
+    => Semble plus laxiste (pas forcément de schéma, la bd peut se créer on fly)
 
 Inconvénients:
   - L'app peut être lourde
