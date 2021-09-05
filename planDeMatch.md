@@ -10,3 +10,6 @@ Inconvénients:
   - L'app peut être lourde
   - S'assurer que l'init de l'app ne charge pas trop de stock
   - Vérifier le css de vuetify pour le chargement ssr.
+
+
+  Pause 17h44
