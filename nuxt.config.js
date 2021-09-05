@@ -32,6 +32,9 @@ module.exports = {
   */
   plugins: [
   ],
+  serverMiddleware: {
+    '/api': '~/api'
+  },
   /*
   ** Nuxt.js dev-modules
   */
