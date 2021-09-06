@@ -7,9 +7,9 @@ const router = Router()
 const typesController = require('../controllers/typesController')
 
 // Register
-router.post('/types/register', typesController.register)
+router.post('/types/create', typesController.addnewType)
 
-// Get User
+// Get Type
 router.get('/types/type', typesController.type)
 
 module.exports = router

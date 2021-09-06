@@ -8,6 +8,7 @@ exports.type = async (req, res) => {
     // on a pas de query donc on demande tout les utilisateurs
     try {
       const types = await Type.find()
+      console.log('les types', types)
       res.status(200).send({ types })
     } catch (err) {
       res.status(500).json(err)

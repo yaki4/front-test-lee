@@ -6,10 +6,16 @@ const router = Router()
 // Initialize Controller
 const usersController = require('../controllers/usersController')
 
-// Register
-// router.post('/users/register', usersController.register)
+// Create user
+router.post('/users/create', usersController.addNewUser)
 
 // Get User
 router.get('/users/user', usersController.user)
+
+// Delete User
+router.delete('/users/:id', usersController.deleteUser)
+
+// Update User
+router.put('/users/:id', usersController.updateUser)
 
 module.exports = router

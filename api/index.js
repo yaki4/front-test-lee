@@ -24,7 +24,7 @@ const users = require('./routes/users')
 const types = require('./routes/types')
 // Use API Routes
 app.use(users)
-app.user(types)
+app.use(types)
 
 // Export the server middleware
 module.exports = {

@@ -1,55 +1,49 @@
 <template lang="pug">
-  v-layout(column='' justify-center='' align-center='')
-    v-flex(xs12='' sm8='' md6='')
-      .text-center
-        logo
-          vuetify-logo
+  v-layout(column, justify-center, align-center)
+    .container
       v-card
-        v-card-title.headline
-          | Welcome to the Vuetify + Nuxt.js template
+        v-card-title.headline Test Creation type
         v-card-text
-          p
-            | Vuetify is a progressive Material Design component framework for Vue.js. It was designed to empower developers to create amazing applications.
-          p
-            | For more information on Vuetify, check out the
-            a(href='https://vuetifyjs.com' target='_blank')
-              | documentation
-            | .
-          p
-            | If you have questions, please join the official
-            a(href='https://chat.vuetifyjs.com/' target='_blank' title='chat')
-              | discord
-            | .
-          p
-            | Find a bug? Report it on the github
-            a(href='https://github.com/vuetifyjs/vuetify/issues' target='_blank' title='contribute')
-              | issue board
-            | .
-          p
-            | Thank you for developing with Vuetify and I look forward to bringing more exciting features in the future.
-          .text-xs-right
-            em
-              small &mdash; John Leider
-          hr.my-3
-          a(href='https://nuxtjs.org/' target='_blank')
-            | Nuxt Documentation
-          br
-          a(href='https://github.com/nuxt/nuxt.js' target='_blank')
-            | Nuxt GitHub
+          v-text-field(v-model='titre', placeholder='titre')
+          v-select(:items='$store.state.types', item-text='titre', item-value='id')
         v-card-actions
           v-spacer
-            v-btn(color='primary' nuxt='' to='/inspire')
-              | Continue
+            v-btn(color='secondary', @click='titre = null ') Annuler
+            v-btn(color='primary', @click='register') Ajouter type
+      user-card
+      user-table
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
-import VuetifyLogo from '~/components/VuetifyLogo.vue'
-
+import UserCard from '@/components/userCard'
+import UserTable from '@/components/userTable'
 export default {
+  name: 'Index',
   components: {
-    Logo,
-    VuetifyLogo
+    UserCard,
+    UserTable
+  },
+  data () {
+    return {
+      titre: null
+    }
+  },
+  methods: {
+    async register () {
+      await this.$axios.post('/api/types/create', {
+        titre: this.titre
+      }).then((response) => {
+        console.log('la reponse', response)
+      }).catch((e) => {
+        console.log(e.response.data.errors)
+      })
+    }
   }
 }
 </script>
+<style scoped>
+.container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+</style>
