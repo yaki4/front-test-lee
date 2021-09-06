@@ -9,10 +9,9 @@
           }
       }
   ],
-  "rewrites": [
-    {
-      "source": "/api/:match*",
-      "destination": "https://front-test-lee.vercel.app//:match*"
-    }
+  "routes": [
+      { "src": "/api/(.*)", "dest": "https://front-test-lee.vercel.app/api/index.js" },
+      { "src": "/api", "dest": "https://front-test-lee.vercel.app/api/index.js" },
+      { "src": "/(.*)", "dest": "https://front-test-lee.vercel.app/$1" }
   ]
 }
