@@ -1,3 +1,4 @@
+require('dotenv').config()
 const colors = require('vuetify/es5/util/colors').default
 
 module.exports = {
@@ -27,6 +28,9 @@ module.exports = {
   */
   css: [
   ],
+  dotenv: {
+    systemvars: true
+  },
   /*
   ** Plugins to load before mounting the App
   */
@@ -40,6 +44,7 @@ module.exports = {
   */
   buildModules: [
     // Doc: https://github.com/nuxt-community/eslint-module
+    '@nuxtjs/dotenv',
     '@nuxtjs/eslint-module',
     '@nuxtjs/vuetify'
   ],
