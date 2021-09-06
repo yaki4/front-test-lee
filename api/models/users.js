@@ -23,6 +23,7 @@ const userSchema = new Schema({
   },
   type_id: {
     type: Schema.Types.ObjectId,
+    required: true,
     ref: 'Type'
   },
   created: {

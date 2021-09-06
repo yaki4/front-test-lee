@@ -3,7 +3,7 @@ const Schema = mongoose.Schema
 const typeSchema = new Schema({
   id: {
     type: Schema.Types.ObjectId,
-    required: true
+    default: new mongoose.mongo.ObjectId()
   },
   titre: {
     type: String,
