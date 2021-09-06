@@ -58,15 +58,16 @@ exports.addNewUser = [
 
 exports.deleteUser = async function (req, res) {
   const id = req.params.id
-  await User.findByIdAndDelete(id, function (err, user) {
+  await User.findByIdAndRemove(id, (err, user) => {
     if (err || !user) {
-      return res.status(500).json({ message: 'Erreur lors de la suppression du user'})
+      return res.status(500).json({ message: 'Erreur lors de la suppression du user', err })
     }
     return res.status(200).json(user)
   })
 }
 
 exports.updateUser = [
+  // on reverif les data ?
   // validator.body('nom', 'Le nom est obligatoire').isLength({ min: 1 }),
   // validator.body('prenom', 'Le prénom est obligatoire').isLength({ min: 1 }),
   // validator.body('email').custom((value) => {
@@ -89,7 +90,7 @@ exports.updateUser = [
       return res.status(422).json({ errors: errors.mapped() })
     }
     const id = req.params.id
-    await User.findOne({ _id: id }, async function (err, user) {
+    await User.findOneAndUpdate({ _id: id }, async function (err, user) {
       if (err) {
         return res.status(500).json({ message: 'Erreur lors de la suppression du contact'})
       } else if (!user) {
