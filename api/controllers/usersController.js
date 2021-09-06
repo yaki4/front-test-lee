@@ -1,6 +1,6 @@
 const User = require('../models/users')
 
-exports.user = async (req, res, next) => {
+exports.user = async (req, res) => {
   if (req.query.id) {
     console.log('on a un user particulier', req.query)
   } else {
@@ -8,7 +8,6 @@ exports.user = async (req, res, next) => {
     try {
       const users = await User.find()
       res.status(200).send({ users })
-      next()
     } catch (err) {
       res.status(500).json(err)
     }
