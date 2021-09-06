@@ -53,13 +53,18 @@ module.exports = {
   */
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
-    '@nuxtjs/axios'
+    '@nuxtjs/axios',
+    '@nuxtjs/proxy'
   ],
   /*
   ** Axios module configuration
   ** See https://axios.nuxtjs.org/options
   */
   axios: {
+    proxy: true
+  },
+  proxy: {
+    '/api/': { target: 'https://front-test-lee.vercel.app/', pathRewrite: { '^/api/': '' }, changeOrigin: true }
   },
   /*
   ** vuetify module configuration
