@@ -1,13 +1,39 @@
-const mongoose = require('mongoose')
-// mongodb database connection string. change it as per your needs. here "mydb" is the name of the database. You don't need to create DB from mongodb terminal. mongoose create the db automatically.
-mongoose.connect('mongodb://localhost/mydb', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-const db = mongoose.connection
-db.on('error', console.error.bind(console, 'connection error:'))
-db.once('open', function callback () {
-  console.log('MongoDB Connected...')
-})
+'use strict'
 
-module.exports = db
+// Import the dependency.
+
+const { MongoClient } = require('mongodb')
+
+const uri = process.env.MONGODB_URI || 'mongodb://localhost'
+
+const options = {
+  useUnifiedTopology: true,
+  useNewUrlParser: true
+}
+
+let client
+
+let clientPromise
+
+if (process.env.NODE_ENV === 'development') {
+  // In development mode, use a global variable so that the value
+
+  // is preserved across module reloads caused by HMR (hot module replacement).
+
+  if (!global._mongoClientPromise) {
+    client = new MongoClient(uri, options)
+    global._mongoClientPromise = client.connect()
+  }
+
+  clientPromise = global._mongoClientPromise
+} else {
+  // In production mode, it's best to not use a global variable.
+  client = new MongoClient(uri, options)
+  clientPromise = client.connect()
+}
+
+// Export a module-scoped MongoClient promise. By doing this in a
+
+// separate module, the client can be shared across functions.
+
+module.exports = clientPromise
