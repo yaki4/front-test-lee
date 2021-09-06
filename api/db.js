@@ -4,7 +4,8 @@
 
 const { MongoClient } = require('mongodb')
 
-const uri = process.env.MONGODB_URI || 'mongodb://localhost'
+// const uri = process.env.MONGODB_URI || 'mongodb://localhost'
+const uri = 'mongodb://localhost:27017/leeroydb'
 
 const options = {
   useUnifiedTopology: true,
