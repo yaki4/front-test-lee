@@ -91,8 +91,9 @@ exports.updateUser = [
     }
     const id = req.params.id
     await User.findOne({ _id: id }, async function (err, user) {
+      console.log('user', user)
       if (err) {
-        return res.status(500).json({ message: 'Erreur lors de la suppression du contact'})
+        return res.status(500).json({ message: 'Erreur lors de lupdate du contact'})
       } else if (!user) {
         return res.status(404).json({ message: 'Contact inconnue' })
       }
@@ -102,8 +103,9 @@ exports.updateUser = [
       user.email = req.body.email ?? user.email
       user.type_id = req.body.type_id ?? user.type_id
       await user.save((err, user) => {
+        console.log('save', user)
         if (err) {
-          return res.status(500).json({ message: 'Erreur lors de la suppression du contact'})
+          return res.status(500).json({ message: 'Erreur lors de lupdate du contact'})
         } else if (!user) {
           return res.status(404).json({ message: 'Contact inconnue' })
         }
