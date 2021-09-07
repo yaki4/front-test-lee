@@ -89,28 +89,49 @@ exports.updateUser = [
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.mapped() })
     }
+    console.log('req', req.params.id)
     const id = req.params.id
-    await User.findOne({ _id: id }, async function (err, user) {
-      console.log('user', user)
-      if (err) {
-        return res.status(500).json({ message: 'Erreur lors de lupdate du contact'})
-      } else if (!user) {
-        return res.status(404).json({ message: 'Contact inconnue' })
-      }
-      user.nom = req.body.nom ?? user.nom
-      user.prenom = req.body.prenom ?? user.prenom
-      user.telephone = req.body.telephone ?? user.telephone
-      user.email = req.body.email ?? user.email
-      user.type_id = req.body.type_id ?? user.type_id
-      await user.save((err, user) => {
-        console.log('save', user)
+    const userRef = await User.findOne({ _id: id })
+    console.log(userRef)
+    if (!userRef) {
+      return res.status(404).json({ message: 'Contact inconnue' })
+    } else {
+      userRef.nom = 'Testupdate new method'
+      // user.nom = req.body.nom ?? userRef.nom
+      userRef.prenom = req.body.prenom ?? userRef.prenom
+      userRef.telephone = req.body.telephone ?? userRef.telephone
+      userRef.email = req.body.email ?? userRef.email
+      userRef.type_id = req.body.type_id ?? userRef.type_id
+      await userRef.save((err, user) => {
         if (err) {
           return res.status(500).json({ message: 'Erreur lors de lupdate du contact'})
         } else if (!user) {
           return res.status(404).json({ message: 'Contact inconnue' })
         }
       })
-      return res.status(200).json(user)
-    })
+      return res.status(200).json(userRef)
+    }
+    // await User.findOne({ _id: id }, async function (err, user) {
+    //   console.log('user', user)
+    //   if (err) {
+    //     return res.status(500).json({ message: 'Erreur lors de lupdate du contact'})
+    //   } else if (!user) {
+    //     return res.status(404).json({ message: 'Contact inconnue' })
+    //   }
+    //   user.nom = req.body.nom ?? user.nom
+    //   user.prenom = req.body.prenom ?? user.prenom
+    //   user.telephone = req.body.telephone ?? user.telephone
+    //   user.email = req.body.email ?? user.email
+    //   user.type_id = req.body.type_id ?? user.type_id
+    //   await user.save((err, user) => {
+    //     console.log('save', user)
+    //     if (err) {
+    //       return res.status(500).json({ message: 'Erreur lors de lupdate du contact'})
+    //     } else if (!user) {
+    //       return res.status(404).json({ message: 'Contact inconnue' })
+    //     }
+    //   })
+    //   return res.status(200).json(user)
+    // })
   }
 ]
