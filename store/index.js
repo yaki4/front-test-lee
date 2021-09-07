@@ -14,6 +14,7 @@ export const mutations = {
 
 export const actions = {
   async nuxtServerInit ({ commit, dispatch, state }, { app, req, res }) {
+    console.log('server init')
     await app.$axios.get('/api/types/type').then(({ data }) => {
       commit('setTypes', data.types)
     }).catch((e) => {
