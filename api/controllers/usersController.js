@@ -90,7 +90,7 @@ exports.updateUser = [
       return res.status(422).json({ errors: errors.mapped() })
     }
     const id = req.params.id
-    await User.findOneAndUpdate({ _id: id }, async function (err, user) {
+    await User.findOne({ _id: id }, async function (err, user) {
       if (err) {
         return res.status(500).json({ message: 'Erreur lors de la suppression du contact'})
       } else if (!user) {
