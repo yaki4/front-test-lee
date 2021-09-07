@@ -12,6 +12,9 @@ router.post('/users/create', usersController.addNewUser)
 // Get User
 router.get('/users/user', usersController.user)
 
+// Get Total User
+router.get('/users/count', usersController.userCount)
+
 // Delete User
 router.delete('/users/:id', usersController.deleteUser)
 

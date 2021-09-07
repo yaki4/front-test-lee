@@ -3,19 +3,40 @@ const mongoose = require('mongoose')
 const User = require('../models/users')
 
 exports.user = async (req, res) => {
+  const pagin = req.query.pagination ? parseInt(req.query.pagination) * 5 : 0
+  const limitResult = req.query.limit ? parseInt(req.query.limit) : 0
   if (req.query.id) {
-    console.log('on a un user particulier', req.query)
+    try {
+      const user = await User.findOne({ _id: req.query.id })
+      return res.status(200).json({ user })
+    } catch (err) {
+      return res.status(404).json({ message: 'Utilisateur inconnu ' })
+    }
+  } else if (req.query.type_id) {
+    try {
+      const users = await User.find({ type_id: req.query.type_id }).skip(pagin).limit(limitResult)
+      res.status(200).json({ users })
+    } catch (err) {
+      return res.status(500).json({ message: 'Erreur requête get user avec type_id ' + req.query.type_id })
+    }
   } else {
     // on a pas de query donc on demande tout les utilisateurs
     try {
-      const users = await User.find()
+      const users = await User.find().skip(pagin).limit(limitResult)
       res.status(200).send({ users })
     } catch (err) {
       res.status(500).json(err)
     }
   }
 }
-
+exports.userCount = async (req, res) => {
+  try {
+    const count = await User.count()
+    res.status(200).send({ count })
+  } catch (err) {
+    res.status(500).json(err)
+  }
+}
 exports.addNewUser = [
   // validator for all required field
   validator.body('nom', 'Le nom est obligatoire').isLength({ min: 1 }),
@@ -46,7 +67,7 @@ exports.addNewUser = [
         prenom: req.body.prenom,
         email: req.body.email,
         telephone: req.body.telephone,
-        type_id: req.body.type ?? '6135841afccc1046ac2006a7'
+        type_id: req.body.type ?? '6135841afccc1046ac2006a7' // type default si pas de valeur
       })
       const userRec = await user.save()
       res.status(200).json({ user: userRec })
@@ -89,10 +110,8 @@ exports.updateUser = [
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.mapped() })
     }
-    console.log('req', req.params.id)
     const id = req.params.id
     const userRef = await User.findOne({ _id: id })
-    console.log(userRef)
     if (!userRef) {
       return res.status(404).json({ message: 'Contact inconnue' })
     } else {
@@ -111,27 +130,5 @@ exports.updateUser = [
       })
       return res.status(200).json(userRef)
     }
-    // await User.findOne({ _id: id }, async function (err, user) {
-    //   console.log('user', user)
-    //   if (err) {
-    //     return res.status(500).json({ message: 'Erreur lors de lupdate du contact'})
-    //   } else if (!user) {
-    //     return res.status(404).json({ message: 'Contact inconnue' })
-    //   }
-    //   user.nom = req.body.nom ?? user.nom
-    //   user.prenom = req.body.prenom ?? user.prenom
-    //   user.telephone = req.body.telephone ?? user.telephone
-    //   user.email = req.body.email ?? user.email
-    //   user.type_id = req.body.type_id ?? user.type_id
-    //   await user.save((err, user) => {
-    //     console.log('save', user)
-    //     if (err) {
-    //       return res.status(500).json({ message: 'Erreur lors de lupdate du contact'})
-    //     } else if (!user) {
-    //       return res.status(404).json({ message: 'Contact inconnue' })
-    //     }
-    //   })
-    //   return res.status(200).json(user)
-    // })
   }
 ]

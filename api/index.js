@@ -21,7 +21,7 @@ app.use(types)
 mongoose
   .connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/test')
   .then(() => {
-    console.log('connect to mongoose')
+    console.log('connexion à la bd')
   })
   .catch((err) => {
     console.log('erreur connextion db', err)

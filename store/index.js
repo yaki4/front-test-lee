@@ -1,6 +1,14 @@
 export const state = () => ({
-  loading: false,
-  types: null
+  loading: true,
+  types: [],
+  countUser: 0,
+  showSnackbarGlobal: false,
+  snackbarGlobalContent: {
+    title: 'Titre par défaut',
+    description: 'description',
+    timeout: 4000,
+    type: 'success'
+  }
 })
 
 export const mutations = {
@@ -9,16 +17,34 @@ export const mutations = {
   },
   setTypes (state, value) {
     state.types = value
+  },
+  setShowSnackbarGlobal (state, payload) {
+    state.showSnackbarGlobal = payload
+  },
+  setSnackbarGlobalContent (state, payload) {
+    state.snackbarGlobalContent = payload
+  },
+  setCountUser (state, payload) {
+    state.countUser = payload
   }
 }
 
 export const actions = {
   async nuxtServerInit ({ commit, dispatch, state }, { app, req, res }) {
-    console.log('server init')
     await app.$axios.get('/api/types/type').then(({ data }) => {
       commit('setTypes', data.types)
     }).catch((e) => {
-      console.error('ERROR', e)
+      console.error('Erreur fetching type', e)
     })
+    await app.$axios.get('/api/users/count').then(({ data }) => {
+      commit('setCountUser', data.count)
+    }).catch((e) => {
+      console.error('Erreur fetching number of users', e)
+    })
+    commit('setLoading', false)
+  },
+  setNotif ({ commit }, value) {
+    commit('setSnackbarGlobalContent', value)
+    commit('setShowSnackbarGlobal', true)
   }
 }

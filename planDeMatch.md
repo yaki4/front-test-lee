@@ -14,6 +14,8 @@ Inconvénients:
 
   Pause 17h44
   reprise 20h03
+
+  
   stop 1h
 
   erreur query already executed => checker si on pa sdeux connexion

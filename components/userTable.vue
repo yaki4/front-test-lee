@@ -5,6 +5,7 @@
         div {{card.nom}} {{card.prenom}}
         v-btn(@click='deleteUser(card)') Supprimer
         v-btn(@click='updateUser(card)') Update
+        v-btn(@click='testNotif') test tt
 </template>
 
 <script>
@@ -25,6 +26,9 @@ export default {
     this.loading = false
   },
   methods: {
+    testNotif () {
+      this.$store.dispatch('setNotif', { type: 'error', description: 'Utilisateur supprimé' })
+    },
     async deleteUser (card) {
       await this.$axios.delete('api/users/' + card._id).then(({ data }) => {
         console.log('bien delete')
