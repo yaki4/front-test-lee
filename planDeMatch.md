@@ -17,5 +17,6 @@ Inconvénients:
 
   
   stop 1h
+  reprise
 
   erreur query already executed => checker si on pa sdeux connexion

@@ -36,15 +36,18 @@ export const actions = {
     }).catch((e) => {
       console.error('Erreur fetching type', e)
     })
-    await app.$axios.get('/api/users/count').then(({ data }) => {
-      commit('setCountUser', data.count)
-    }).catch((e) => {
-      console.error('Erreur fetching number of users', e)
-    })
+    await dispatch('getCountUser', app.$axios)
     commit('setLoading', false)
   },
   setNotif ({ commit }, value) {
     commit('setSnackbarGlobalContent', value)
     commit('setShowSnackbarGlobal', true)
+  },
+  async getCountUser ({ commit }, axios) {
+    await axios.get('/api/users/count').then(({ data }) => {
+      commit('setCountUser', data.count)
+    }).catch((e) => {
+      console.error('Erreur fetching number of users', e)
+    })
   }
 }

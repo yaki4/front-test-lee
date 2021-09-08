@@ -4,7 +4,7 @@ const User = require('../models/users')
 
 exports.user = async (req, res) => {
   const pagin = req.query.pagination ? parseInt(req.query.pagination) * 5 : 0
-  const limitResult = req.query.limit ? parseInt(req.query.limit) : 0
+  const limitResult = req.query.limit ? parseInt(req.query.limit) : 5
   if (req.query.id) {
     try {
       const user = await User.findOne({ _id: req.query.id })
@@ -15,7 +15,8 @@ exports.user = async (req, res) => {
   } else if (req.query.type_id) {
     try {
       const users = await User.find({ type_id: req.query.type_id }).skip(pagin).limit(limitResult)
-      res.status(200).json({ users })
+      const total = await User.count({ type_id: req.query.type_id })
+      res.status(200).json({ users, total })
     } catch (err) {
       return res.status(500).json({ message: 'Erreur requête get user avec type_id ' + req.query.type_id })
     }
@@ -23,7 +24,8 @@ exports.user = async (req, res) => {
     // on a pas de query donc on demande tout les utilisateurs
     try {
       const users = await User.find().skip(pagin).limit(limitResult)
-      res.status(200).send({ users })
+      const total = await User.count()
+      res.status(200).send({ users, total })
     } catch (err) {
       res.status(500).json(err)
     }
@@ -88,23 +90,6 @@ exports.deleteUser = async function (req, res) {
 }
 
 exports.updateUser = [
-  // on reverif les data ?
-  // validator.body('nom', 'Le nom est obligatoire').isLength({ min: 1 }),
-  // validator.body('prenom', 'Le prénom est obligatoire').isLength({ min: 1 }),
-  // validator.body('email').custom((value) => {
-  //   if (!value || value.length === 0) {
-  //     // eslint-disable-next-line prefer-promise-reject-errors
-  //     return Promise.reject(new Error('Email est obligatoire'))
-  //   } else {
-  //     return User.findOne({ email: value }).then((user) => {
-  //       if (user !== null) {
-  //         // eslint-disable-next-line prefer-promise-reject-errors
-  //         return Promise.reject(new Error('Email déjà utilisé'))
-  //       }
-  //     })
-  //   }
-  // }),
-  // validator.body('telephone', 'Le téléphone est obligatoire').isLength({ min: 1 }),
   async function (req, res) {
     const errors = validator.validationResult(req)
     if (!errors.isEmpty()) {
@@ -115,12 +100,11 @@ exports.updateUser = [
     if (!userRef) {
       return res.status(404).json({ message: 'Contact inconnue' })
     } else {
-      userRef.nom = 'Testupdate new method'
-      // user.nom = req.body.nom ?? userRef.nom
-      userRef.prenom = req.body.prenom ?? userRef.prenom
-      userRef.telephone = req.body.telephone ?? userRef.telephone
-      userRef.email = req.body.email ?? userRef.email
-      userRef.type_id = req.body.type_id ?? userRef.type_id
+      userRef.nom = req.body.user.nom ?? userRef.nom
+      userRef.prenom = req.body.user.prenom ?? userRef.prenom
+      userRef.telephone = req.body.user.telephone ?? userRef.telephone
+      userRef.email = req.body.user.email ?? userRef.email
+      userRef.type_id = req.body.user.type ?? userRef.type_id
       await userRef.save((err, user) => {
         if (err) {
           return res.status(500).json({ message: 'Erreur lors de lupdate du contact'})

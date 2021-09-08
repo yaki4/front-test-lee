@@ -1,25 +1,40 @@
 <template lang="pug">
   .user-card
+    v-dialog(v-model='loading', persistent, width='300', :overlay-opacity='0.95')
+      v-card.relative.centered-content(height='15vh')
+        v-card-title.headline Chargement en cours
+        v-progress-circular.headline(indeterminate)
     v-card
-      v-card-title.headline {{ contextContact }}
+      v-card-title
+        .flex
+          h1 {{ contextContact }}
+          v-btn.ma4(v-if='context === "detail"', icon, small, @click='editable = !editable')
+            v-icon {{ editable ? 'mdi-pencil' : 'mdi-pencil-off'}}
       v-card-text
         v-form(ref='formulaireContact')
-          v-text-field(v-model='nom', placeholder='nom du contact', required, :rules='nomRules')
-          v-text-field(v-model='prenom', placeholder='prénom du contact', required, :rules='prenomRules')
-          v-text-field(v-model='email', placeholder='email du contact', required, :rules='emailRules')
-          v-text-field(v-model='telephone', placeholder='514XXXXXX', required, :rules='telephoneRules')
-          v-select(v-model='selectType', :items='$store.state.types', item-text='titre', item-value='_id', required, :rules='typeRules')
-      v-card-actions
-        //- v-spacer
+          v-text-field(v-model='nom', placeholder='nom du contact', required, :rules='nomRules', :disabled='editable', , :outlined='editable', label='nom')
+          v-text-field(v-model='prenom', placeholder='prénom du contact', required, :rules='prenomRules', :disabled='editable', , :outlined='editable', label='prenom')
+          v-text-field(v-model='email', placeholder='email du contact', required, :rules='emailRules', :disabled='editable', , :outlined='editable', label='email')
+          v-text-field(v-model='telephone', placeholder='514XXXXXX', required, :rules='telephoneRules', :disabled='editable', , :outlined='editable', label='telephone')
+          v-select(v-model='selectType', :items='$store.state.types', item-text='titre', item-value='_id', required, :rules='typeRules', :disabled='editable', , :outlined='editable', label='type')
+
+      v-card-actions(v-if='context === "creation" || !editable')
+        v-spacer
         v-btn(color='secondary', @click='cancel') Annuler
-        v-btn(color='primary', @click='register', :disabled='valid || loading') Ajouter type
+        v-btn(color='primary', @click='register', :disabled='valid || loading') {{ context === 'creation' ? 'Créer fiche contact' : 'Mettre à jour cette fiche'}}
 </template>
 
 <script>
 export default {
   name: 'UserCard',
+  props: {
+    user: { required: false, type: Object, default: () => null },
+    context: { required: false, type: String, default: 'creation' },
+    load: { required: false, type: Boolean, default: false }
+  },
   data () {
     return {
+      editable: true,
       loading: false,
       nom: null,
       nomRules: [
@@ -48,7 +63,7 @@ export default {
   },
   computed: {
     contextContact () {
-      return "Création d'une fiche contact"
+      return this.context === 'detail' ? 'Fiche contact de ' + this.user.nom + ' ' + this.user.prenom : "Création d'une fiche contact"
     },
     valid () {
       if (this.nom && this.prenom && this.telephone && this.selectType && this.email) {
@@ -58,28 +73,61 @@ export default {
       }
     }
   },
-  methods: {
-    async register () {
-      this.loading = true
-      if (this.$refs.formulaireContact.validate()) {
-        await this.$axios.post('/api/users/create', {
-          nom: this.nom,
-          prenom: this.prenom,
-          email: this.email,
-          telephone: this.telephone,
-          type: this.selectType
-        }).then((response) => {
-          console.log('la reponse', response)
-        }).catch((e) => {
-          console.log(e.response.data.errors)
-        })
-        this.loading = false
-      } else {
-        this.loading = false
+  watch: {
+    load: {
+      immediate: true,
+      handler (newVal) {
+        this.loading = newVal
+        if (newVal) {
+          this.editable = false
+        }
       }
     },
+    context: {
+      immediate: true,
+      handler (newVal) {
+        if (newVal === 'creation') {
+          this.editable = false
+        }
+      }
+    },
+    user: {
+      deep: true,
+      immediate: true,
+      handler (newVal) {
+        if (newVal) {
+          this.editable = true
+          this.nom = newVal.nom
+          this.prenom = newVal.prenom
+          this.telephone = newVal.telephone
+          this.email = newVal.email
+          this.selectType = newVal.type_id
+        }
+      }
+    }
+  },
+  methods: {
+    register () {
+      this.editable = true
+      const user = {
+        nom: this.nom,
+        prenom: this.prenom,
+        email: this.email,
+        telephone: this.email,
+        type: this.selectType
+      }
+      const emitText = this.context === 'creation' ? 'create' : 'update'
+      this.$emit(emitText, user)
+    },
     cancel () {
-      console.log('cancel')
+      if (this.context !== 'creation') {
+        this.editable = true
+      }
+      this.nom = this.user ? this.user.nom : null
+      this.prenom = this.user ? this.user.prenom : null
+      this.email = this.user ? this.user.email : null
+      this.telephone = this.user ? this.user.telephone : null
+      this.selectType = this.user ? this.user.type_id : null
     }
   }
 }
