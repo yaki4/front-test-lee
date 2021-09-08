@@ -56,7 +56,9 @@ export default {
         this.$store.dispatch('setNotif', { type: 'error', description: 'Erreur lors de la mise à jour du contact' })
         console.error('erreur update user', e)
       })
-      this.loading = false
+      this.$nextTick(() => {
+        this.loading = false
+      })
     },
     async deleteUser () {
       this.loading = true
@@ -68,7 +70,9 @@ export default {
         this.$store.dispatch('setNotif', { type: 'error', description: 'Erreur lors de la suppression du contact' })
         console.error('erreur update user', e)
       })
-      this.loading = false
+      this.$nextTick(() => {
+        this.loading = false
+      })
     }
   }
 }

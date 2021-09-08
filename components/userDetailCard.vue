@@ -11,7 +11,7 @@
         v-card-actions
           v-spacer
           v-btn(color='secondary', @click='trash = !trash', :disabled='loading') Annuler
-          v-btn(color='primary', @click='deleteUser', :disabled='loading') Supprimer le contact
+          v-btn(color='primary', @click.once='deleteUser', :disabled='loading') Supprimer le contact
     v-card(transition="scroll-y-reverse-transition")
       v-card-title
         .flex
@@ -141,7 +141,7 @@ export default {
         nom: this.nom,
         prenom: this.prenom,
         email: this.email,
-        telephone: this.email,
+        telephone: this.telephone,
         type: this.selectType
       }
       const emitText = this.context === 'creation' ? 'create' : 'update'
