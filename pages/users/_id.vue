@@ -13,13 +13,18 @@ export default {
   },
   async asyncData ({ $axios, error, route }) {
     let dataUser
+    error({ statusCode: 404, message: 'Usager inconnue' })
     try {
       dataUser = await $axios.get('/api/users/user?id=' + route.params.id)
     } catch (e) {
+      error({ statusCode: 500, message: 'Usager inconnue' })
+    }
+    if (!dataUser) {
       error({ statusCode: 404, message: 'Usager inconnue' })
     }
+    // console.log(dataUser)
     return {
-      user: dataUser.data.user,
+      user: dataUser && dataUser.data && dataUser.data.user ? dataUser.data.user : null,
       editMode: false,
       loading: false
     }

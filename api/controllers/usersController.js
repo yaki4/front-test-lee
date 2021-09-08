@@ -8,7 +8,11 @@ exports.user = async (req, res) => {
   if (req.query.id) {
     try {
       const user = await User.findOne({ _id: req.query.id })
-      return res.status(200).json({ user })
+      if (!user) {
+        return res.status(404).json({ message: 'Utilisateur inconnu ' })
+      } else {
+        return res.status(200).json({ user })
+      }
     } catch (err) {
       return res.status(404).json({ message: 'Utilisateur inconnu ' })
     }
