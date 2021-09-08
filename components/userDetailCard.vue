@@ -35,11 +35,11 @@
                   span Modifier le contact
       v-card-text
         v-form(ref='formulaireContact')
-          v-text-field(v-model='nom', placeholder='nom du contact', required, :rules='nomRules', :disabled='editable', , :outlined='editable', label='nom')
-          v-text-field(v-model='prenom', placeholder='prénom du contact', required, :rules='prenomRules', :disabled='editable', , :outlined='editable', label='prenom')
-          v-text-field(v-model='email', placeholder='email du contact', required, :rules='emailRules', :disabled='editable', , :outlined='editable', label='email')
-          v-text-field(v-model='telephone', placeholder='514XXXXXX', required, :rules='telephoneRules', :disabled='editable', , :outlined='editable', label='telephone')
-          v-select(v-model='selectType', :items='$store.state.types', item-text='titre', item-value='_id', required, :rules='typeRules', :disabled='editable', , :outlined='editable', label='type')
+          v-text-field(v-model='nom', placeholder='nom du contact', required, :rules='nomRules', :disabled='editable', :outlined='editable', label='nom')
+          v-text-field(v-model='prenom', placeholder='prénom du contact', required, :rules='prenomRules', :disabled='editable', :outlined='editable', label='prenom')
+          v-text-field(v-model='email', placeholder='email du contact', required, :rules='emailRules', :disabled='editable', :outlined='editable', label='email')
+          v-text-field(v-model='telephone', placeholder='514XXXXXX', required, :rules='telephoneRules', :disabled='editable', :outlined='editable', label='telephone')
+          v-select(v-model='selectType', :items='$store.state.types', item-text='titre', item-value='_id', required, :rules='typeRules', :disabled='editable', :outlined='editable', label='type')
 
       v-card-actions(v-if='context === "creation" || !editable')
         v-spacer
