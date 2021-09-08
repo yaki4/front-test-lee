@@ -85,12 +85,17 @@ exports.addNewUser = [
 
 exports.deleteUser = async function (req, res) {
   const id = req.params.id
-  await User.findByIdAndRemove(id, (err, user) => {
-    if (err || !user) {
-      return res.status(500).json({ message: 'Erreur lors de la suppression du user', err })
-    }
+  const user = await User.findOne({ _id: id })
+  if (!user) {
+    return res.status(404).json({ message: 'Usager a supprimer introuvable' })
+  } else {
+    await user.remove((err) => {
+      if (err) {
+        return res.status(500).json({ message: 'Erreur lors de la suppression du user', err })
+      }
+    })
     return res.status(200).json(user)
-  })
+  }
 }
 
 exports.updateUser = [
