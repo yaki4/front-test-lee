@@ -16,7 +16,7 @@
       v-card-title
         .flex
           h1 {{ contextContact }}
-          v-menu(rounded)
+          v-menu(v-if='context !== "creation"', rounded)
             template(v-slot:activator="{ attrs, on }")
               v-btn.ma4(icon, small, v-on='on', v-bind='attrs')
                 v-icon mdi-dots-vertical

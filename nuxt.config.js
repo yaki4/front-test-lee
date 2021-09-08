@@ -16,7 +16,7 @@ module.exports = {
       { hid: 'description', name: 'description', content: "Un test d'application pour leeroy" }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.png' },
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
       { rel: 'stylesheet', href: 'https://unpkg.com/tachyons@4.9.1/css/tachyons.min.css' }
     ]
   },
@@ -28,7 +28,7 @@ module.exports = {
   ** Global CSS
   */
   css: [
-    'vuetify/dist/vuetify.min.css',
+    'vuetify/dist/vuetify.css',
     '~/assets/global.css'
   ],
   dotenv: {
@@ -74,7 +74,6 @@ module.exports = {
   ** https://github.com/nuxt-community/vuetify-module
   */
   vuetify: {
-    customVariables: ['~/assets/variables.scss'],
     theme: {
       dark: true,
       themes: {

@@ -1,5 +1,5 @@
 <template lang="pug">
-  .container.absolute
+  .container
     h1 Bienvenue dans votre application de gestion de contacts
     h2 La base de données contient {{ $store.state.countUser }} contacts enregistrés
     .actions-grid
@@ -12,8 +12,6 @@
 <script>
 export default {
   name: 'Index',
-  components: {
-  },
   data () {
     return {
       titre: null
@@ -23,8 +21,6 @@ export default {
     if (!this.$store.state.types.length === 0) {
       this.$store.commit('setLoading', true)
     }
-  },
-  methods: {
   }
 }
 </script>

@@ -6,6 +6,14 @@ export default {
       get () { return this.$store.state.loading },
       set (val) { this.$store.commit('setLoading', val) }
     }
+  },
+  methods: {
+    start () {
+      this.loading = true
+    },
+    finish () {
+      this.loading = false
+    }
   }
 }
 </script>
