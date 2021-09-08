@@ -1,6 +1,7 @@
 <template lang="pug">
   .user-detail.centered-content(v-if='user')
-    user-detail-card(:user='user', context='detail', @update='updateUser', :load='loading')
+    v-expand-transition
+      user-detail-card(:user='user', context='detail', @update='updateUser', @delete='deleteUser', :load='loading')
 </template>
 
 <script>
@@ -23,6 +24,28 @@ export default {
       loading: false
     }
   },
+  head () {
+    return {
+      title: 'Fiche Contact de ' + this.user.nom + ' ' + this.user.prenom,
+      meta: [
+        {
+          hid: 'description',
+          name: 'description',
+          content: 'Une page pour faire des modifications sur la fiche du contact'
+        },
+        {
+          hid: 'og:title',
+          property: 'og:title',
+          content: 'Fiche Contact de ' + this.user.nom + ' ' + this.user.prenom
+        },
+        {
+          hid: 'og:description',
+          property: 'og:description',
+          content: 'Une page pour faire des modifications sur la fiche du contact'
+        }
+      ]
+    }
+  },
   methods: {
     async updateUser (user) {
       this.loading = true
@@ -34,6 +57,18 @@ export default {
         console.error('erreur update user', e)
       })
       this.loading = false
+    },
+    async deleteUser () {
+      this.loading = true
+      await this.$axios.delete('api/users/' + this.user._id).then(({ data }) => {
+        this.$store.dispatch('getCountUser', this.$axios)
+        this.$store.dispatch('setNotif', { type: 'success', description: 'Contact supprimé' })
+        this.$router.push({ name: 'users' })
+      }).catch((e) => {
+        this.$store.dispatch('setNotif', { type: 'error', description: 'Erreur lors de la suppression du contact' })
+        console.error('erreur update user', e)
+      })
+      this.loading = false
     }
   }
 }
@@ -42,11 +77,5 @@ export default {
 <style>
   .user-detail{
     top: 25%;
-  }
-  .centered-content {
-    margin: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
   }
 </style>

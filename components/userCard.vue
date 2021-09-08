@@ -1,5 +1,5 @@
 <template lang="pug">
-  v-card.mx-auto(max-width='344', :to='{ name: "users-id", params: { id: user._id } }')
+  v-card(v-if='user', width='344', :to='{ name: "users-id", params: { id: user._id } }')
     v-list-item(two-line)
       v-list-item-content
         v-list-item-title.text-h5.mb-1 {{user.nom}} {{user.prenom}}

@@ -31,11 +31,7 @@ export const mutations = {
 
 export const actions = {
   async nuxtServerInit ({ commit, dispatch, state }, { app, req, res }) {
-    await app.$axios.get('/api/types/type').then(({ data }) => {
-      commit('setTypes', data.types)
-    }).catch((e) => {
-      console.error('Erreur fetching type', e)
-    })
+    await dispatch('getTypes', app.$axios)
     await dispatch('getCountUser', app.$axios)
     commit('setLoading', false)
   },
@@ -43,10 +39,19 @@ export const actions = {
     commit('setSnackbarGlobalContent', value)
     commit('setShowSnackbarGlobal', true)
   },
-  async getCountUser ({ commit }, axios) {
+  async getTypes ({ commit, dispatch }, axios) {
+    await axios.get('/api/types/type').then(({ data }) => {
+      commit('setTypes', data.types)
+    }).catch((e) => {
+      dispatch('setNotif', { type: 'error', description: 'Erreur lors de la récupération des types' })
+      console.error('Erreur fetching type', e)
+    })
+  },
+  async getCountUser ({ commit, dispatch }, axios) {
     await axios.get('/api/users/count').then(({ data }) => {
       commit('setCountUser', data.count)
     }).catch((e) => {
+      dispatch('setNotif', { type: 'error', description: 'Erreur lors de la récupération du nombre de contact' })
       console.error('Erreur fetching number of users', e)
     })
   }

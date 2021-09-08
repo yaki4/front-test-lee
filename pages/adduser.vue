@@ -1,6 +1,6 @@
 <template lang="pug">
   .add-user.centered-content
-    user-detail-card(@create='createUser', :load='loading')
+    user-detail-card(@create='createUser', :load='loading', transition="scroll-y-reverse-transition")
 </template>
 
 <script>
@@ -13,6 +13,28 @@ export default {
   data () {
     return {
       loading: false
+    }
+  },
+  head () {
+    return {
+      title: 'La page pour créer des contacts',
+      meta: [
+        {
+          hid: 'description',
+          name: 'description',
+          content: 'Une page pour créer des contacts'
+        },
+        {
+          hid: 'og:title',
+          property: 'og:title',
+          content: 'La page pour créer des contacts'
+        },
+        {
+          hid: 'og:description',
+          property: 'og:description',
+          content: 'Une page pour créer des contacts'
+        }
+      ]
     }
   },
   methods: {
@@ -33,10 +55,4 @@ export default {
 </script>
 
 <style>
-  .centered-content {
-    margin: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
 </style>

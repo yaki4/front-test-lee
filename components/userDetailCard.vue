@@ -3,13 +3,36 @@
     v-dialog(v-model='loading', persistent, width='300', :overlay-opacity='0.95')
       v-card.relative.centered-content(height='15vh')
         v-card-title.headline Chargement en cours
-        v-progress-circular.headline(indeterminate)
-    v-card
+        v-card-text
+          v-progress-circular.headline(indeterminate)
+    v-dialog(v-model='trash', persistent, :overlay-opacity='0.60')
+      v-card.relative.centered-content(height='15vh')
+        v-card-title.headline Êtes-vous certains de vouloir supprimer ce contact ?
+        v-card-actions
+          v-spacer
+          v-btn(color='secondary', @click='trash = !trash', :disabled='loading') Annuler
+          v-btn(color='primary', @click='deleteUser', :disabled='loading') Supprimer le contact
+    v-card(transition="scroll-y-reverse-transition")
       v-card-title
         .flex
           h1 {{ contextContact }}
-          v-btn.ma4(v-if='context === "detail"', icon, small, @click='editable = !editable')
-            v-icon {{ editable ? 'mdi-pencil' : 'mdi-pencil-off'}}
+          v-menu(rounded)
+            template(v-slot:activator="{ attrs, on }")
+              v-btn.ma4(icon, small, v-on='on', v-bind='attrs')
+                v-icon mdi-dots-vertical
+            v-list
+              v-list-item
+                v-tooltip(bottom)
+                  template(v-slot:activator='{ on: tooltip }')
+                    v-btn.ma4(icon, small, @click='trash = !trash', v-on='tooltip')
+                      v-icon mdi-delete
+                  span Supprimer le contact
+              v-list-item
+                v-tooltip(bottom)
+                  template(v-slot:activator='{ on: tooltip }')
+                    v-btn.ma4(icon, small, @click='editable = !editable', v-on='tooltip')
+                      v-icon {{ editable ? 'mdi-pencil' : 'mdi-pencil-off'}}
+                  span Modifier le contact
       v-card-text
         v-form(ref='formulaireContact')
           v-text-field(v-model='nom', placeholder='nom du contact', required, :rules='nomRules', :disabled='editable', , :outlined='editable', label='nom')
@@ -34,6 +57,7 @@ export default {
   },
   data () {
     return {
+      trash: false,
       editable: true,
       loading: false,
       nom: null,
@@ -107,6 +131,10 @@ export default {
     }
   },
   methods: {
+    deleteUser () {
+      this.loading = true
+      this.$emit('delete')
+    },
     register () {
       this.editable = true
       const user = {

@@ -1,14 +1,14 @@
 <template lang="pug">
   .users.centered-content
-    div.mb2.flex
-      h1.w-50 Liste des vos contacts
+    div.flex.header-liste
+      h1.w-50.mr2 Liste des vos contacts
       v-select.filtertype(v-model='typeSelect', :items='$store.state.types', item-text='titre', item-value='_id', placeholder='Filtrer par type', @change='changeFilterType', clearable)
-    .flex-wrap.space-around
+    .container
       template(v-if='loading')
-        v-skeleton-loader.mx-auto(max-width='344', type='list-item-two-line, image, table-tfoot', tile)
+        v-skeleton-loader.mx-auto(width='344', type='list-item-two-line, image, table-tfoot', tile)
       template(v-else-if='listUser.length > 0')
-        user-card.ma4(v-for='(user, index) in listUser', :key='index', :user='user')
-        v-skeleton-loader.mx-auto(v-if='totalUser > listUser.length && !fetchMoreLoading', max-width='300', type='card', v-intersect='onIntersect', tile)
+        user-card.carduser(v-for='(user, index) in listUser', :key='index', :user='user')
+        v-skeleton-loader.mx-auto(v-if='totalUser > listUser.length', width='344', type='card', v-intersect='onIntersect', tile)
       template(v-else)
         h2 Aucun contact enregistré {{ typeSelect ? ' avec le type ' + $store.state.types.find(e => e._id === this.typeSelect).titre : '' }}
 </template>
@@ -31,9 +31,31 @@ export default {
       page: 0
     }
   },
+  head () {
+    return {
+      title: 'La page avec ma liste de contacts',
+      meta: [
+        {
+          hid: 'description',
+          name: 'description',
+          content: 'Une page pour afficher la liste de mes contacts avec une pagination et filtre'
+        },
+        {
+          hid: 'og:title',
+          property: 'og:title',
+          content: 'La page avec ma liste de contacts'
+        },
+        {
+          hid: 'og:description',
+          property: 'og:description',
+          content: 'Une page pour afficher la liste de mes contacts avec une pagination et filtre'
+        }
+      ]
+    }
+  },
   methods: {
-    async onIntersect (isIntersecting) {
-      if (isIntersecting) {
+    async onIntersect (entries, observer, isIntersecting) {
+      if (isIntersecting && !this.fetchMoreLoading) {
         this.fetchMoreLoading = true
         this.page++
         try {
@@ -58,6 +80,7 @@ export default {
         await this.$axios.get(url)
           .then(({ data }) => {
             this.listUser = data.users
+            this.totalUser = data.total
           })
       } catch (e) {
         console.error('erreur get contacts with filter', e)
@@ -72,10 +95,22 @@ export default {
 .filtertype {
   margin-top: 1rem;
 }
-.centered-content {
-  margin: auto;
+.container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.carduser {
+  flex: 0 1 calc(25% - 1em);
+  min-width: 344px;
+  flex: 1 0 500px;
+  box-sizing: border-box;
+  margin-top: 1rem;
+  margin-left: 1rem;
+}
+@media only screen and (max-width: 600px) {
+  .carduser {
+    margin-left: -.5rem;
+  }
 }
 </style>

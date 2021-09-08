@@ -8,15 +8,15 @@ module.exports = {
   ** Headers of the page
   */
   head: {
-    titleTemplate: '%s - ' + process.env.npm_package_name,
-    title: process.env.npm_package_name || '',
+    titleTemplate: '%s - Contact Application Leeroy',
+    title: 'Contact Application Leeroy',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: process.env.npm_package_description || '' }
+      { hid: 'description', name: 'description', content: "Un test d'application pour leeroy" }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.png' },
       { rel: 'stylesheet', href: 'https://unpkg.com/tachyons@4.9.1/css/tachyons.min.css' }
     ]
   },
@@ -28,6 +28,8 @@ module.exports = {
   ** Global CSS
   */
   css: [
+    'vuetify/dist/vuetify.min.css',
+    '~/assets/global.css'
   ],
   dotenv: {
     systemvars: true
