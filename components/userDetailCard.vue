@@ -6,7 +6,7 @@
         v-card-text
           v-progress-circular.headline(indeterminate)
     v-dialog(v-model='trash', persistent, :overlay-opacity='0.60')
-      v-card.relative.centered-content(height='15vh')
+      v-card.relative.centered-content(height='20vh')
         v-card-title.headline Êtes-vous certains de vouloir supprimer ce contact ?
         v-card-actions
           v-spacer
